@@ -1,18 +1,15 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { mount } from "@odoo/owl";
+import { mount, whenReady } from "@odoo/owl";
 import { Playground } from "./playground";
-
-// The following code ensures that owl mount the component when ready.
-// `templates` contains templates contained in the bundles.
-//
-// In the mount options, it's also possible to add other interresting
-// configuration: https://github.com/odoo/owl/blob/master/doc/reference/app.md#configuration
 import { templates } from "@web/core/assets";
-owl.whenReady( () => {
-    mount(Playground, document.body, { templates, dev: true });
+
+// Mount the Playground component when the document.body is ready
+whenReady( () => {
+    mount(Playground, document.body, { templates, dev: true, name: "Owl Tutorial" });
 });
+
 
 
 /**
