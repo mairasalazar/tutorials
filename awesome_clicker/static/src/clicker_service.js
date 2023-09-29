@@ -4,7 +4,8 @@ import { registry } from "@web/core/registry";
 import { reactive } from "@odoo/owl";
 
 const clickerService = {
-    start(env) {
+    dependencies: ["effect"],
+    start(env, services) {
         const state = reactive({
             clicks: 0,
             unlockLevel: 0,
@@ -18,6 +19,10 @@ const clickerService = {
         function increment(inc) {
             state.clicks += inc;
             if (state.clicks >= 1000 && state.unlockLevel < 1) {
+                services.effect.add({
+                    message: "Milestone reached! You can now buy clickbots",
+                    type: "rainbow_man",
+                });
                 state.unlockLevel++;
             }
         }
