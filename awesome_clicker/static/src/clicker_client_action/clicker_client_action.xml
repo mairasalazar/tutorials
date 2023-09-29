@@ -7,6 +7,20 @@
                 Increment
             </button>
         </div>
+        <div t-if="this.clickService.state.unlockLevel >= 1" class="ms-1 mt-1">
+            <h2> Bots </h2>
+            <div class="card">
+                <div class="card-header">
+                    <t t-esc="this.clickService.state.clickBots"/>x ClickBots (10 clicks/10seconds)
+                    <i class="fa fa-android"></i>
+                </div>
+                <div class="card-body">
+                    <button t-on-click="() => this.clickService.buyClickBot()" class="btn btn-primary">
+                        Buy ClickBot (1000 clicks)
+                    </button>
+                </div>
+            </div>
+        </div>
     </t>
 
 </templates>
