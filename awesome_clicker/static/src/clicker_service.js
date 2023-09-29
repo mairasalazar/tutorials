@@ -9,6 +9,7 @@ const clickerService = {
         const milestones = [
             { clicks: 1000, unlock: "clickBot" },
             { clicks: 5000, unlock: "bigBot" },
+            { clicks: 100000, unlock: "power multiplier" },
         ];
         const state = reactive({
             clicks: 0,
@@ -26,13 +27,15 @@ const clickerService = {
                     unlockLevel: 2,
                     increment: 100,
                     purchased: 0,
-                }
-            }
+                },
+            },
+            multiplier: 1,
         });
 
         setInterval(() => {
             for (const bot in state.bots) {
-                state.clicks += state.bots[bot].increment * state.bots[bot].purchased;
+                state.clicks +=
+                    state.bots[bot].increment * state.bots[bot].purchased * state.multiplier;
             }
         }, 10000);
 
@@ -60,10 +63,19 @@ const clickerService = {
             state.bots[name].purchased += 1;
         }
 
+        function buyMultiplier() {
+            if (state.clicks < 50000) {
+                return false;
+            }
+            state.clicks -= 50000;
+            state.multiplier++;
+        }
+
         return {
             state,
             increment,
             buyBot,
+            buyMultiplier,
         };
     },
 };
