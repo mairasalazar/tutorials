@@ -6,40 +6,64 @@ import { reactive } from "@odoo/owl";
 const clickerService = {
     dependencies: ["effect"],
     start(env, services) {
+        const milestones = [
+            { clicks: 1000, unlock: "clickBot" },
+            { clicks: 5000, unlock: "bigBot" },
+        ];
         const state = reactive({
             clicks: 0,
             unlockLevel: 0,
             clickBots: 0,
+            bots: {
+                clickbot: {
+                    price: 1000,
+                    unlockLevel: 1,
+                    increment: 10,
+                    purchased: 0,
+                },
+                bigbot: {
+                    price: 5000,
+                    unlockLevel: 2,
+                    increment: 100,
+                    purchased: 0,
+                }
+            }
         });
 
         setInterval(() => {
-            state.clicks += state.clickBots * 10;
+            for (const bot in state.bots) {
+                state.clicks += state.bots[bot].increment * state.bots[bot].purchased;
+            }
         }, 10000);
 
         function increment(inc) {
             state.clicks += inc;
-            if (state.clicks >= 1000 && state.unlockLevel < 1) {
+            if (
+                milestones[state.unlockLevel] &&
+                state.clicks >= milestones[state.unlockLevel].clicks
+            ) {
                 services.effect.add({
-                    message: "Milestone reached! You can now buy clickbots",
+                    message: `Milestone reached! You can now buy ${
+                        milestones[state.unlockLevel].unlock
+                    }`,
                     type: "rainbow_man",
                 });
-                state.unlockLevel++;
+                state.unlockLevel += 1;
             }
         }
 
-        function buyClickBot() {
-            const clickBotPrice = 1000;
-            if (state.clicks < clickBotPrice) {
+        function buyBot(name) {
+            if (state.clicks < state.bots[name].price) {
                 return false;
             }
-            state.clicks -= clickBotPrice;
-            state.clickBots += 1;
+            state.clicks -= state.bots[name].price;
+            state.bots[name].purchased += 1;
         }
 
         return {
             state,
             increment,
-            buyClickBot,
+            buyBot,
         };
     },
 };
