@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 import { reactive } from "@odoo/owl";
+import { rewards } from "./click_rewards";
 
 const clickerService = {
     dependencies: ["effect"],
@@ -71,11 +72,24 @@ const clickerService = {
             state.multiplier++;
         }
 
+        function getReward() {
+            const availableReward = [];
+            for (const reward of rewards) {
+                if (reward.minLevel <= state.unlockLevel || !reward.minLevel) {
+                    if (reward.maxLevel >= state.unlockLevel || !reward.maxLevel) {
+                        availableReward.push(reward);
+                    }
+                }
+            }
+            return availableReward[Math.floor(Math.random() * availableReward.length)];
+        }
+
         return {
             state,
             increment,
             buyBot,
             buyMultiplier,
+            getReward,
         };
     },
 };
