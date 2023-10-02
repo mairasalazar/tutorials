@@ -93,6 +93,12 @@ const clickerService = {
                             onClick: () => {
                                 reward.apply(this);
                                 closeNotification();
+                                if (
+                                    services.action.currentController.action.tag !==
+                                    "awesome_clicker.dashboard"
+                                ) {
+                                    services.action.doAction("awesome_clicker.dashboard");
+                                }
                                 services.action.doAction("awesome_clicker.dashboard");
                             },
                         },
