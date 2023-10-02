@@ -5,7 +5,7 @@ import { reactive } from "@odoo/owl";
 import { rewards } from "./click_rewards";
 
 const clickerService = {
-    dependencies: ["effect"],
+    dependencies: ["action", "effect", "notification"],
     start(env, services) {
         const milestones = [
             { clicks: 1000, unlock: "clickBot" },
@@ -72,7 +72,7 @@ const clickerService = {
             state.multiplier++;
         }
 
-        function getReward() {
+        function giveReward() {
             const availableReward = [];
             for (const reward of rewards) {
                 if (reward.minLevel <= state.unlockLevel || !reward.minLevel) {
@@ -81,7 +81,24 @@ const clickerService = {
                     }
                 }
             }
-            return availableReward[Math.floor(Math.random() * availableReward.length)];
+            const reward = availableReward[Math.floor(Math.random() * availableReward.length)];
+            const closeNotification = services.notification.add(
+                `Congrats you won a reward: "${reward.description}"`,
+                {
+                    type: "success",
+                    sticky: true,
+                    buttons: [
+                        {
+                            name: "Collect",
+                            onClick: () => {
+                                reward.apply(this);
+                                closeNotification();
+                                services.action.doAction("awesome_clicker.dashboard");
+                            },
+                        },
+                    ],
+                }
+            );
         }
 
         return {
@@ -89,7 +106,7 @@ const clickerService = {
             increment,
             buyBot,
             buyMultiplier,
-            getReward,
+            giveReward,
         };
     },
 };
