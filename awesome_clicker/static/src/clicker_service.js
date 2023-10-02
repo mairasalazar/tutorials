@@ -11,6 +11,7 @@ const clickerService = {
             { clicks: 1000, unlock: "clickBot" },
             { clicks: 5000, unlock: "bigBot" },
             { clicks: 100000, unlock: "power multiplier" },
+            { clicks: 1000000, unlock: "pear tree & cherry tree" },
         ];
         const state = reactive({
             clicks: 0,
@@ -30,6 +31,24 @@ const clickerService = {
                     purchased: 0,
                 },
             },
+            trees: {
+                pearTree: {
+                    price: 1000000,
+                    unlockLevel: 4,
+                    produce: "pear",
+                    purchased: 0,
+                },
+                cherryTree: {
+                    price: 1000000,
+                    unlockLevel: 4,
+                    produce: "cherry",
+                    purchased: 0,
+                },
+            },
+            fruits: {
+                pear: 0,
+                cherry: 0,
+            },
             multiplier: 1,
         });
 
@@ -39,6 +58,12 @@ const clickerService = {
                     state.bots[bot].increment * state.bots[bot].purchased * state.multiplier;
             }
         }, 10000);
+
+        setInterval(() => {
+            for (const tree in state.trees) {
+                state.fruits[state.trees[tree].produce] += state.trees[tree].purchased;
+            }
+        }, 30000);
 
         function increment(inc) {
             state.clicks += inc;
@@ -62,6 +87,14 @@ const clickerService = {
             }
             state.clicks -= state.bots[name].price;
             state.bots[name].purchased += 1;
+        }
+
+        function buyTree(name) {
+            if (state.clicks < state.trees[name].price) {
+                return false;
+            }
+            state.clicks -= state.trees[name].price;
+            state.trees[name].purchased += 1;
         }
 
         function buyMultiplier() {
@@ -113,6 +146,7 @@ const clickerService = {
             buyBot,
             buyMultiplier,
             giveReward,
+            buyTree,
         };
     },
 };
