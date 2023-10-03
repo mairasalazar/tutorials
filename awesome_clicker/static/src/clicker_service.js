@@ -5,8 +5,21 @@ import { reactive } from "@odoo/owl";
 import { rewards } from "./click_rewards";
 import { browser } from "@web/core/browser/browser";
 
-const CURRENT_VERSION = 1.0;
-const migrations = [];
+const CURRENT_VERSION = 2.0;
+const migrations = [
+    {
+        fromVersion: 1.0,
+        apply: (state) => {
+            state.trees.peachTree = {
+                price: 1500000,
+                unlockLevel: 4,
+                produce: "peach",
+                purchased: 0,
+            };
+            state.fruits.peach = 0;
+        },
+    },
+];
 
 const clickerService = {
     dependencies: ["action", "effect", "notification"],
@@ -49,10 +62,17 @@ const clickerService = {
                     produce: "cherry",
                     purchased: 0,
                 },
+                peachTree: {
+                    price: 1500000,
+                    unlockLevel: 4,
+                    produce: "peach",
+                    purchased: 0,
+                },
             },
             fruits: {
                 pear: 0,
                 cherry: 0,
+                peach: 0,
             },
             multiplier: 1,
         });
