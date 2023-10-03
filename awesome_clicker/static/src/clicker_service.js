@@ -3,6 +3,7 @@
 import { registry } from "@web/core/registry";
 import { reactive } from "@odoo/owl";
 import { rewards } from "./click_rewards";
+import { browser } from "@web/core/browser/browser";
 
 const clickerService = {
     dependencies: ["action", "effect", "notification"],
@@ -52,11 +53,15 @@ const clickerService = {
             multiplier: 1,
         });
 
+        const localState = JSON.parse(browser.localStorage.getItem("clickerState"));
+        Object.assign(state, localState);
+
         setInterval(() => {
             for (const bot in state.bots) {
                 state.clicks +=
                     state.bots[bot].increment * state.bots[bot].purchased * state.multiplier;
             }
+            browser.localStorage.setItem("clickerState", JSON.stringify(state));
         }, 10000);
 
         setInterval(() => {
