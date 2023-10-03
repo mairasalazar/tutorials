@@ -5,6 +5,9 @@ import { reactive } from "@odoo/owl";
 import { rewards } from "./click_rewards";
 import { browser } from "@web/core/browser/browser";
 
+const CURRENT_VERSION = 1.0;
+const migrations = [];
+
 const clickerService = {
     dependencies: ["action", "effect", "notification"],
     start(env, services) {
@@ -15,6 +18,7 @@ const clickerService = {
             { clicks: 1000000, unlock: "pear tree & cherry tree" },
         ];
         const state = reactive({
+            version: CURRENT_VERSION,
             clicks: 0,
             unlockLevel: 0,
             clickBots: 0,
@@ -53,7 +57,20 @@ const clickerService = {
             multiplier: 1,
         });
 
+        // The strategy used for migrations is to apply each migration with fromVersion >= localStorage state version
+        // migrations are sorted so they are applied in the right order
+        migrations.sort((a, b) => {
+            return a.fromVersion - b.fromVersion;
+        });
         const localState = JSON.parse(browser.localStorage.getItem("clickerState"));
+        if (localState?.version < CURRENT_VERSION) {
+            for (const migration of migrations) {
+                if (localState.version === migration.fromVersion) {
+                    migration.apply(localState);
+                }
+            }
+            localState.version = CURRENT_VERSION;
+        }
         Object.assign(state, localState);
 
         setInterval(() => {
