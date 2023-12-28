@@ -3,9 +3,9 @@
 
     <t t-name="awesome_owl.playground">
         <div>
-            Counter: <t t-esc="state.value"/>
+            <Counter/>
+            <Counter/>
         </div>
-        <div><button class="btn-primary" t-on-click="increment">Increment</button></div>
     </t>
 
 </templates>
