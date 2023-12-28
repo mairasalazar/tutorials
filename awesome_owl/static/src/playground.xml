@@ -5,6 +5,8 @@
         <div>
             <Counter/>
             <Counter/>
+            <Card content="card1.content" title="card1.title"/>
+            <Card content="card2.content" title="card2.title"/>
         </div>
     </t>
 
