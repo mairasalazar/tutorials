@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+
+    <t t-name="awesome_owl.todolist">
+        <div class="bg-white border rounded mt-3 p-3">
+            <t t-foreach="todos" t-as="todo" t-key="todo.id">
+                <TodoItem todo="todo"/>
+            </t> 
+        </div>
+    </t>
+</templates>
