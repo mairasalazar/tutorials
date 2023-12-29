@@ -20,4 +20,11 @@ export class TodoList extends Component {
             ev.target.value="";
         }
     }
+
+    toggleId(id_received) {
+        let todo = this.todos.find((x) => x.id === id_received)
+        if ( todo ) {
+            todo.isCompleted = !todo.isCompleted;
+        }
+    } 
 }
