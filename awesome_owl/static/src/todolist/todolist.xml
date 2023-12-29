@@ -3,6 +3,8 @@
 
     <t t-name="awesome_owl.todolist">
         <div class="bg-white border rounded mt-3 p-3">
+            <input class="form-control" placeholder="Enter a new task." t-on-keyup="addTodo"></input>
+            <br/>
             <t t-foreach="todos" t-as="todo" t-key="todo.id">
                 <TodoItem todo="todo"/>
             </t> 
