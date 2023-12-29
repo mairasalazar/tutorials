@@ -10,7 +10,7 @@ export class TodoItem extends Component {
             shape: {
                 id: Number,
                 description: String,
-                isCompleted: Boolean,
+                isCompleted: {type: Boolean, optional: true},
             }
         } 
     }
